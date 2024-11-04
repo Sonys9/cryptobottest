@@ -69,4 +69,4 @@ while True:
                                                     if t.reply_markup:
                                                         t.click(0)
     client.delete_messages('@send', torem)
-    time.sleep(60)
+    time.sleep(3600)
