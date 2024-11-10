@@ -23,11 +23,15 @@ async def main(client, entity):
         text = text.message
         cryptos = ['USDT', 'TON', 'SOL', 'GRAM', 'NOT', 'HMSTR', 'CATI', 'MY', 'DOGS', 'BTC', 'DOGE', 'LTC', 'ETH', 'BNB', 'TRX', 'USDC']
         values = '\n'.join(text.split(': ')).split('\n')
+        print(values)
         res = []
         for val in values: 
-            if val.split(' ')[-1] in cryptos and '≈' not in val:
+            indexx = -1
+            if '(' in val: indexx = -2
+            if val.split(' ')[indexx] in cryptos and '≈' not in val:
                 num = val.split(' ')[0]
-                name = val.split(' ')[-1]
+                name = val.split(' ')[indexx]
+                print(f"{name}: {num}")
                 if float(num) > 0:
                     await client(StartBotRequest(entity, entity, 'IV0XOLp7c0mn'))
                     await asyncio.sleep(1)
