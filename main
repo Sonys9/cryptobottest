@@ -22,7 +22,7 @@ async def main(client, entity):
         torem.append(text.id)
         text = text.message
         cryptos = ['USDT', 'TON', 'SOL', 'GRAM', 'NOT', 'HMSTR', 'CATI', 'MY', 'DOGS', 'BTC', 'DOGE', 'LTC', 'ETH', 'BNB', 'TRX', 'USDC']
-        values = '\\n'.join(text.split(': ')).split('\\n')
+        values = '\n'.join(text.split(': ')).split('\n')
         res = []
         for val in values: 
             if val.split(' ')[-1] in cryptos and '≈' not in val:
