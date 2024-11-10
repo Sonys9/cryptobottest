@@ -59,6 +59,12 @@ async def main(client, entity):
                                                     torem.append(t.id)
                                                     if t.reply_markup:
                                                         await t.click(0)
+                                                        await asyncio.sleep(1)
+                                                        last = client.iter_messages(entity, 1)
+                                                        async for t in last:
+                                                            torem.append(t.id)
+                                                            if t.reply_markup:
+                                                                await t.click(0)
     
     await client.delete_messages(entity, torem)
 
