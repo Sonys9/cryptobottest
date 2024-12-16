@@ -1,5 +1,6 @@
 from telethon.tl.functions.messages import StartBotRequest
 from telethon import TelegramClient
+from telethon.sessions import StringSession
 import asyncio
 
 async def main(client, entity):
